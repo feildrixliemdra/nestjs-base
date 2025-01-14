@@ -20,6 +20,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: 'user' }) // Default role
+  role: string;
+
   @CreateDateColumn()
   created_at?: Date;
 

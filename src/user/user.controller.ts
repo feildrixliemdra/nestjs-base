@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDTO } from './dto/user.dto';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -18,6 +28,12 @@ export class UserController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/profile')
+  getProfile(@Req() req: any) {
+    return req.user; // This comes from the JWT payload
+  }
+
   @Get()
   async getAll() {
     const user = await this.userService.findAll();
@@ -33,7 +49,7 @@ export class UserController {
     ];
   }
 
-  @Get(':id')
+  @Get('/:id')
   async getById(@Param('id') id: number) {
     const user = await this.userService.findOne(id);
 
@@ -49,6 +65,7 @@ export class UserController {
   @Put(':id')
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDTO) {
     const user = await this.userService.update(id, updateUserDto);
+
     return {
       id: user.id,
       name: user.name,

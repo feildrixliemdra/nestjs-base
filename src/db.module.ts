@@ -11,6 +11,7 @@ const typeORMModule = TypeOrmModule.forRootAsync({
     password: configService.get('DB_PASSWORD') || 'password',
     database: configService.get('DB_NAME') || 'db_name',
     autoLoadEntities: true,
+    synchronize: true,
   }),
   inject: [ConfigService],
 });
