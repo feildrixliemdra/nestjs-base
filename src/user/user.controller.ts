@@ -11,12 +11,15 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDTO } from './dto/user.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
+@ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @ApiBody({ type: CreateUserDto })
   async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.userService.create(createUserDto);
 
@@ -63,6 +66,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @ApiBody({ type: UpdateUserDTO })
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDTO) {
     const user = await this.userService.update(id, updateUserDto);
 
